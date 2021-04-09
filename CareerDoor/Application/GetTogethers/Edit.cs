@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using Application.Core;
+using AutoMapper;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 using System;
@@ -13,12 +15,18 @@ namespace Application.GetTogethers
 {
     public class Edit
     {
-        public class Command :IRequest{
+        public class Command :IRequest<Result<Unit>>{
             public GetTogether GetTogether { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command> {
+            public CommandValidator()
+            {
+                RuleFor(x => x.GetTogether).SetValidator(new GetTogetherValidator());
+            }
+        }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             public DataContext _context { get; set; }
             public IMapper _mapper { get; set; }
@@ -27,13 +35,13 @@ namespace Application.GetTogethers
                 _context = context;
                 _mapper = mapper;
             }
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var meeting = await _context.GetTogethers.FindAsync(request.GetTogether.Id);
 
                 if (meeting == null)
                 {
-                    throw new Exception("Could not find meeting.");
+                    return null;
                 }
 
                 _mapper.Map(request.GetTogether,meeting);
@@ -42,10 +50,10 @@ namespace Application.GetTogethers
 
                 if (success)
                 {
-                    return Unit.Value;
+                    return Result<Unit>.Success(Unit.Value);
                 }
 
-                throw new Exception("Problem during saving changes.");
+                return Result<Unit>.Failure("Failed to update the meeting.");
             }
         }
     }

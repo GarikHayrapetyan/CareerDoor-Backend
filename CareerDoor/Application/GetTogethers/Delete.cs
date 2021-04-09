@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Core;
+using MediatR;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Application.GetTogethers
 {
     public class Delete
     {
-        public class Command : IRequest {
+        public class Command : IRequest<Result<Unit>> {
             public Guid Id { get; set; }
         }
 
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
 
@@ -24,13 +25,13 @@ namespace Application.GetTogethers
             {
                 _context = context;
             }
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var meeting = await _context.GetTogethers.FindAsync(request.Id);
 
                 if (meeting==null)
                 {
-                    throw new Exception("Could not find meeting");
+                   return null;
                 }
 
                 _context.GetTogethers.Remove(meeting);
@@ -38,10 +39,10 @@ namespace Application.GetTogethers
 
                 if (success)
                 {
-                    return Unit.Value;
+                    return Result<Unit>.Success(Unit.Value);
                 }
 
-                throw new Exception("Problem during saving changes.");
+                return Result<Unit>.Failure("Failed to delete the meeting.");
             }
         }
     }

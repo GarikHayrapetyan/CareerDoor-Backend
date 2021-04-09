@@ -3,8 +3,8 @@ using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -13,21 +13,21 @@ namespace API.Controllers
     {
        
         [HttpGet]
-        public async Task<ActionResult<List<GetTogether>>> List() {
+        public async Task<IActionResult> List(CancellationToken token) {
 
-            return await Mediator.Send(new List.Query());
+            return GetTogetherHandleRequest(await Mediator.Send(new List.Query(),token));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetTogether>> Details(Guid id) {
+        public async Task<IActionResult> Details(Guid id) {
 
-            return await Mediator.Send(new Details.Query { Id = id });
+            return GetTogetherHandleRequest(await Mediator.Send(new Details.Query { Id = id }));
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Create(GetTogether getTogether) {
+        public async Task<IActionResult> Create(GetTogether getTogether) {
 
-            return Ok(await Mediator.Send(new Create.Command { getTogether=getTogether}));
+            return GetTogetherHandleRequest(await Mediator.Send(new Create.Command { GetTogether=getTogether}));
         }
 
         [HttpPut("{id}")]
@@ -38,10 +38,8 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(Guid id,Delete.Command command) {  
-            command.Id = id;
-
-            return await Mediator.Send(command);
+        public async Task<IActionResult> Delete(Guid id) {  
+            return GetTogetherHandleRequest(await Mediator.Send(new Delete.Command { Id=id}));
         }
 
     }

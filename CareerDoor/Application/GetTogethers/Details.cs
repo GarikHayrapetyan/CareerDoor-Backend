@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Core;
+using Domain;
 using MediatR;
 using Persistence;
 using System;
@@ -12,12 +13,12 @@ namespace Application.GetTogethers
 {
     public class Details
     {
-        public class Query : IRequest<GetTogether> {
+        public class Query : IRequest<Result<GetTogether>> {
             public Guid Id { get; set; }
         }
 
 
-        public class Handler : IRequestHandler<Query, GetTogether>
+        public class Handler : IRequestHandler<Query, Result<GetTogether>>
         {
             private readonly DataContext _context;
 
@@ -25,10 +26,9 @@ namespace Application.GetTogethers
             {
                 _context = context;
             }
-            public async Task<GetTogether> Handle(Query request, CancellationToken cancellationToken)
-            {               
-
-                return await _context.GetTogethers.FindAsync(request.Id);
+            public async Task<Result<GetTogether>> Handle(Query request, CancellationToken cancellationToken)
+            {         
+               return Result<GetTogether>.Success(await _context.GetTogethers.FindAsync(request.Id));
             }
         }
     }
