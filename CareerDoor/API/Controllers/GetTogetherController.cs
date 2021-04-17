@@ -31,10 +31,10 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> Edit(Guid id, GetTogether getTogether) {
+        public async Task<IActionResult> Edit(Guid id, GetTogether getTogether) {
             getTogether.Id = id;
 
-            return Ok(await Mediator.Send(new Edit.Command { GetTogether=getTogether}));
+            return GetTogetherHandleRequest(await Mediator.Send(new Edit.Command { GetTogether=getTogether}));
         }
 
         [HttpDelete("{id}")]
