@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using FluentValidation.AspNetCore;
 using Application.GetTogethers;
 using API.Middleware;
+using API.Services;
 
 namespace API
 {
@@ -28,6 +29,7 @@ namespace API
             });
             services.AddApplicationServices(Configuration);
             services.AddIdentityServices(Configuration);
+            services.AddScoped<TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +45,7 @@ namespace API
             app.UseRouting();
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
