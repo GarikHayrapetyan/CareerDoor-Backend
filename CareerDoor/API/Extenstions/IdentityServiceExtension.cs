@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +12,17 @@ namespace API.Extenstions
 {
     public static class IdentityServiceExtension
     {
-        public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration config) {
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config) {
 
-            return null;
+            services.AddIdentityCore<AppUser>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+            })
+                .AddEntityFrameworkStores<DataContext>()
+                .AddSignInManager<SignInManager<AppUser>>();
+
+            services.AddAuthentication();
+            return services;
         }
     }
 }

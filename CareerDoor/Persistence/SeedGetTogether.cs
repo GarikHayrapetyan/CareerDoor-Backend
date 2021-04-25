@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,24 @@ namespace Persistence
 {
     public class SeedGetTogether
     {
-        public static async Task Seed(DataContext context)
+        public static async Task Seed(DataContext context, UserManager<AppUser> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                var users = new List<AppUser> {
+                    new AppUser { DisplayName="Bob",UserName="bob",Email="bob@test.com"},
+                    new AppUser { DisplayName="Tom",UserName="tom",Email="tom@test.com"},
+                    new AppUser { DisplayName="Jane",UserName="jane",Email="jane@test.com"},
+                };
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user,"P@$$w0rd");
+                }
+
+
+            }
+
             if (!context.GetTogethers.Any())
             {
                 var meetings = new List<GetTogether> {
@@ -41,5 +58,7 @@ namespace Persistence
                 await context.SaveChangesAsync();
             }
         }
+
+       
     }
 }

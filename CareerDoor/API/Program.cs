@@ -1,4 +1,6 @@
+using Domain;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,8 +24,9 @@ namespace API
                 try
                 {
                     var context = services.GetRequiredService<DataContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     await context.Database.MigrateAsync();
-                    await SeedGetTogether.Seed(context);
+                    await SeedGetTogether.Seed(context,userManager);
                 }
                 catch (Exception ex)
                 {
