@@ -1,4 +1,5 @@
 ﻿using Application.Core;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,26 +14,30 @@ namespace Application.GetTogethers
 {
     public class List
     {
-        public class Query : IRequest<Result<List<GetTogether>>> { 
+        public class Query : IRequest<Result<List<GetTogetherDTO>>> { 
         }
 
-        public class Handler : IRequestHandler<Query, Result<List<GetTogether>>>
+        public class Handler : IRequestHandler<Query, Result<List<GetTogetherDTO>>>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
             private readonly ILogger _logger;
 
-            public Handler(DataContext context,ILogger<List> logger)
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
-                _logger = logger;
+                _mapper = mapper;
             }
-            public async Task<Result<List<GetTogether>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<GetTogetherDTO>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var getTogethers = await _context.GetTogethers
                     .Include(a => a.Attendees)
                     .ThenInclude(u => u.AppUser)
                     .ToListAsync(cancellationToken);
-                return Result<List<GetTogether>>.Success(getTogethers);
+
+                var getTogethersToReturn = _mapper.Map<List<GetTogetherDTO>>(getTogethers);
+
+                return Result<List<GetTogetherDTO>>.Success(getTogethersToReturn);
             }
         }
     }

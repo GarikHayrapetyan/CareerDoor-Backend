@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.GetTogethers;
+using AutoMapper;
 using Domain;
 
 namespace Application.Core
@@ -8,6 +9,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<GetTogether, GetTogether>();
+            CreateMap<GetTogether, GetTogetherDTO>();
         }
     }
 }
