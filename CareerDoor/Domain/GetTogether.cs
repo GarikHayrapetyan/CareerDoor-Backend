@@ -12,6 +12,6 @@ namespace Domain
         public string Link { get; set; }
         public string PassCode { get; set; }
 
-        public ICollection<GetTogetherAttendee> Attendees { get; set; }
+        public ICollection<GetTogetherAttendee> Attendees { get; set; } = new List<GetTogetherAttendee>();
     }
 }
