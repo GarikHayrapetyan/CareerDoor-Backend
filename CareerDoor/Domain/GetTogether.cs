@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -10,5 +11,7 @@ namespace Domain
         public DateTime Date { get; set; }
         public string Link { get; set; }
         public string PassCode { get; set; }
+
+        public ICollection<GetTogetherAttendee> Attendees { get; set; }
     }
 }
