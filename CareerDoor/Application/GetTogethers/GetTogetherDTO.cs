@@ -12,7 +12,8 @@ namespace Application.GetTogethers
         public DateTime Date { get; set; }
         public string Link { get; set; }
         public string PassCode { get; set; }
-        public string HostUsername { get; set; } 
+        public string HostUsername { get; set; }
+        public bool IsCancelled { get; set; }
         public ICollection<Profile> Attendees { get; set; }
     }
 }

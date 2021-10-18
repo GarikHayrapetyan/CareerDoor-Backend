@@ -11,7 +11,7 @@ namespace Domain
         public DateTime Date { get; set; }
         public string Link { get; set; }
         public string PassCode { get; set; }
-
+        public bool IsCancelled { get; set; }
         public ICollection<GetTogetherAttendee> Attendees { get; set; } = new List<GetTogetherAttendee>();
     }
 }
