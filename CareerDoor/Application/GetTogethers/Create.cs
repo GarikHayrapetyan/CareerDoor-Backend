@@ -49,6 +49,8 @@ namespace Application.GetTogethers
                     IsHost = true
                 };
 
+                request.GetTogether.Attendees.Add(attendee);
+
                _context.GetTogethers.Add(request.GetTogether);
 
                 var success = await _context.SaveChangesAsync() > 0;
