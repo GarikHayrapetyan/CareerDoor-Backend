@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Application.Profiles;
+using System;
 using System.Collections.Generic;
 
-namespace Domain
+namespace Application.GetTogethers
 {
-    public class GetTogether
+    public class GetTogetherDTO
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -11,7 +12,8 @@ namespace Domain
         public DateTime Date { get; set; }
         public string Link { get; set; }
         public string PassCode { get; set; }
+        public string HostUsername { get; set; }
         public bool IsCancelled { get; set; }
-        public ICollection<GetTogetherAttendee> Attendees { get; set; } = new List<GetTogetherAttendee>();
+        public ICollection<Profile> Attendees { get; set; }
     }
 }
