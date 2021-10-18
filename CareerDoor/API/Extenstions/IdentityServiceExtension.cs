@@ -1,12 +1,14 @@
 ﻿using Domain;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using System.Text;
-
+using static Infrastructure.Security.IsHostRequirement;
 
 namespace API.Extenstions
 {
@@ -32,6 +34,17 @@ namespace API.Extenstions
                         ValidateAudience=false
                     };
                 });
+            
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsGetTogetherHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+            
             return services;
         }
     }

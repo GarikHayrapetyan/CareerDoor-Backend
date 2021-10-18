@@ -12,8 +12,6 @@ namespace API.Controllers
 {
     public class GetTogetherController : BaseApiController
     {
-       
-        
         [HttpGet]
         public async Task<IActionResult> List(CancellationToken token) {
 
@@ -32,6 +30,7 @@ namespace API.Controllers
             return GetTogetherHandleRequest(await Mediator.Send(new Create.Command { GetTogether=getTogether}));
         }
 
+        [Authorize(Policy = "IsGetTogetherHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(Guid id, GetTogether getTogether) {
             getTogether.Id = id;
@@ -39,6 +38,7 @@ namespace API.Controllers
             return GetTogetherHandleRequest(await Mediator.Send(new Edit.Command { GetTogether=getTogether}));
         }
 
+        [Authorize(Policy = "IsGetTogetherHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) {  
             return GetTogetherHandleRequest(await Mediator.Send(new Delete.Command { Id=id}));
