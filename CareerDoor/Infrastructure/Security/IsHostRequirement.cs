@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Linq;
@@ -28,7 +29,10 @@ namespace Infrastructure.Security
 
                 var getTogetherId = Guid.Parse(_httpContextAccessor.HttpContext?.Request.RouteValues.SingleOrDefault(x => x.Key == "id").Value?.ToString());
 
-                var attendee = _dbContext.GetTogetherAttendees.FindAsync(userId, getTogetherId).Result;
+                var attendee = _dbContext.GetTogetherAttendees
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(x => x.AppUserID == userId && x.GetTogetherId == getTogetherId)
+                    .Result;
 
                 if (attendee == null) return Task.CompletedTask;
 
