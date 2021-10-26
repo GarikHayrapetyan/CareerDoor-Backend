@@ -15,6 +15,8 @@ namespace Persistence
 
         public DbSet<GetTogetherAttendee> GetTogetherAttendees { get; set; }
 
+        public DbSet<Photo> Photos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
