@@ -1,6 +1,7 @@
 ﻿using Application.Core;
 using Application.GetTogethers;
 using Application.Interfaces;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,7 @@ namespace API.Extenstions
                         WithOrigins("http://localhost:3000");    
                 });
             });
-
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             return services;
         }
     }
