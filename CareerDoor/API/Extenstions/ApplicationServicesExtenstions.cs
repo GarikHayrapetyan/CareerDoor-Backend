@@ -42,6 +42,7 @@ namespace API.Extenstions
                         WithOrigins("http://localhost:3000");    
                 });
             });
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             return services;
         }
