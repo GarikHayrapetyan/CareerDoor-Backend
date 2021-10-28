@@ -14,7 +14,7 @@ namespace API.Controllers
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
 
-        protected IActionResult GetTogetherHandleRequest<T>(Result<T> result) {
+        protected IActionResult HandleResult<T>(Result<T> result) {
 
             if (result == null)
             {

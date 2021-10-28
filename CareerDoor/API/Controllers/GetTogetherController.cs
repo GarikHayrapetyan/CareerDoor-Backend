@@ -15,19 +15,19 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> List(CancellationToken token) {
 
-            return GetTogetherHandleRequest(await Mediator.Send(new List.Query(),token));
+            return HandleResult(await Mediator.Send(new List.Query(),token));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(Guid id) {
 
-            return GetTogetherHandleRequest(await Mediator.Send(new Details.Query { Id = id }));
+            return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(GetTogether getTogether) {
 
-            return GetTogetherHandleRequest(await Mediator.Send(new Create.Command { GetTogether=getTogether}));
+            return HandleResult(await Mediator.Send(new Create.Command { GetTogether=getTogether}));
         }
 
         [Authorize(Policy = "IsGetTogetherHost")]
@@ -35,19 +35,19 @@ namespace API.Controllers
         public async Task<IActionResult> Edit(Guid id, GetTogether getTogether) {
             getTogether.Id = id;
 
-            return GetTogetherHandleRequest(await Mediator.Send(new Edit.Command { GetTogether=getTogether}));
+            return HandleResult(await Mediator.Send(new Edit.Command { GetTogether=getTogether}));
         }
 
         [Authorize(Policy = "IsGetTogetherHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) {  
-            return GetTogetherHandleRequest(await Mediator.Send(new Delete.Command { Id=id}));
+            return HandleResult(await Mediator.Send(new Delete.Command { Id=id}));
         } 
 
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> Attend(Guid id)
         {
-            return GetTogetherHandleRequest(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
         }
     }
 }
