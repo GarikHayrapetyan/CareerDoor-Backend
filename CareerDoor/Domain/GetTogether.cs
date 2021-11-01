@@ -13,5 +13,6 @@ namespace Domain
         public string PassCode { get; set; }
         public bool IsCancelled { get; set; }
         public ICollection<GetTogetherAttendee> Attendees { get; set; } = new List<GetTogetherAttendee>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

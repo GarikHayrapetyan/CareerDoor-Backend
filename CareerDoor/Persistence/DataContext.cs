@@ -16,6 +16,7 @@ namespace Persistence
         public DbSet<GetTogetherAttendee> GetTogetherAttendees { get; set; }
 
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,6 +33,11 @@ namespace Persistence
                 .HasOne(u => u.GetTogether)
                 .WithMany(a => a.Attendees)
                 .HasForeignKey(aa => aa.GetTogetherId);
+
+            builder.Entity<Comment>()
+                .HasOne(g => g.GetTogether)
+                .WithMany(c => c.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     } 
 }
