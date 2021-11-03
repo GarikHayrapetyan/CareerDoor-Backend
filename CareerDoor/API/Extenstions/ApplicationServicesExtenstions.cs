@@ -39,6 +39,7 @@ namespace API.Extenstions
                     builder.
                         AllowAnyMethod().
                         AllowAnyHeader().
+                        AllowCredentials().
                         WithOrigins("http://localhost:3000");    
                 });
             });
