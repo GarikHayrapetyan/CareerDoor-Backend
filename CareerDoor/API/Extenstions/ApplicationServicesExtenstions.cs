@@ -39,11 +39,13 @@ namespace API.Extenstions
                     builder.
                         AllowAnyMethod().
                         AllowAnyHeader().
+                        AllowCredentials().
                         WithOrigins("http://localhost:3000");    
                 });
             });
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            services.AddSignalR();
             return services;
         }
     }
