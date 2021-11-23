@@ -1,14 +1,11 @@
 ﻿using Application.Core;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,16 +22,18 @@ namespace Application.GetTogethers
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
             public async Task<Result<GetTogetherDTO>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var getTogether = await _context.GetTogethers
-                   .ProjectTo<GetTogetherDTO>(_mapper.ConfigurationProvider)
+                   .ProjectTo<GetTogetherDTO>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
                    .FirstOrDefaultAsync(x => x.Id == request.Id);
 
                return Result<GetTogetherDTO>.Success(getTogether);
