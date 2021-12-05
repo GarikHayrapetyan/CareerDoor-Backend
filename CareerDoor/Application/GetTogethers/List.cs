@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,10 +14,12 @@ namespace Application.GetTogethers
 {
     public class List
     {
-        public class Query : IRequest<Result<List<GetTogetherDTO>>> { 
+        public class Query : IRequest<Result<PagedList<GetTogetherDTO>>> 
+        {
+            public GetTogetherParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<List<GetTogetherDTO>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<GetTogetherDTO>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -28,13 +31,27 @@ namespace Application.GetTogethers
                 _mapper = mapper;
                 _userAccessor = userAccessor;
             }
-            public async Task<Result<List<GetTogetherDTO>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<GetTogetherDTO>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var getTogethers = await _context.GetTogethers
+                var query = _context.GetTogethers
+                    .Where(d => d.Date >= request.Params.StartDate)
+                    .OrderBy(d => d.Date)
                     .ProjectTo<GetTogetherDTO>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
-                    .ToListAsync(cancellationToken);
+                    .AsQueryable();
+                if(request.Params.IsGoing && !request.Params.IsHost)
+                {
+                    query = query.Where(x => x.Attendees.Any(a => a.Username == _userAccessor.GetUsername()));
+                }
 
-                return Result<List<GetTogetherDTO>>.Success(getTogethers);
+                if(request.Params.IsHost && !request.Params.IsGoing)
+                {
+                    query = query.Where(x => x.HostUsername == _userAccessor.GetUsername());
+                }
+
+                return Result<PagedList<GetTogetherDTO>>.Success(
+                        await PagedList<GetTogetherDTO>.CreateAsync(query, request.Params.PageNumber, 
+                        request.Params.PageSize)
+                );
             }
         }
     }
