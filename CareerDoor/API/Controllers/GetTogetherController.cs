@@ -1,4 +1,5 @@
-﻿using Application.GetTogethers;
+﻿using Application.Core;
+using Application.GetTogethers;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,9 @@ namespace API.Controllers
     public class GetTogetherController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> List(CancellationToken token) {
+        public async Task<IActionResult> List([FromQuery] GetTogetherParams param, CancellationToken token) {
 
-            return HandleResult(await Mediator.Send(new List.Query(),token));
+            return HandlePagedResult(await Mediator.Send(new List.Query{Params = param },token));
         }
 
         [HttpGet("{id}")]
