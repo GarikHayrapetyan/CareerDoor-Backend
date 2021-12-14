@@ -63,7 +63,7 @@ namespace Persistence
                     {
                         Title = ".Net",
                         Description = "Get start with .Net",
-                        Date = DateTime.Now.AddMonths(1),
+                        Date = DateTime.Now.AddMonths(10),
                         Link = "https://dotnet.microsoft.com/apps/aspnet",
                         PassCode = "bxc15fd",
                         Attendees = new List<GetTogetherAttendee>
