@@ -104,6 +104,7 @@ namespace Persistence
                 };
                 await context.GetTogethers.AddRangeAsync(getTogethers);
                 await context.SaveChangesAsync();
+
             }
         }
     }

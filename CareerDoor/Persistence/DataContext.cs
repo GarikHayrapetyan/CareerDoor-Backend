@@ -12,12 +12,11 @@ namespace Persistence
         }
 
         public DbSet<GetTogether> GetTogethers { get; set; }
-
         public DbSet<GetTogetherAttendee> GetTogetherAttendees { get; set; }
-
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserFollowing> UserFollowings { get; set; }
+        public DbSet<Job> Jobs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,6 +52,13 @@ namespace Persistence
                     .WithMany(f => f.Followers)
                     .HasForeignKey(o => o.TargetId)
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<Job>(j=> {
+                j.Property(p => p.Title).HasMaxLength(30);
+                j.Property(p => p.Company).HasMaxLength(40);
+                j.Property(p => p.Function).HasMaxLength(20);
+                j.Property(p => p.Industry).HasMaxLength(30);
             });
         }
     } 
