@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Jobs;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,26 +16,19 @@ namespace API.Controllers
     [AllowAnonymous]
     public class JobController : BaseApiController
     {
-        private readonly DataContext _context;
-
-        public JobController(DataContext context)
-        {
-            _context = context;
-        }
-
-    
+           
         // GET: api/<JobController>
         [HttpGet]
-        public async Task<ActionResult<List<Job>>> Get()
+        public async Task<ActionResult<List<Job>>> GetJobs()
         {
-            return await _context.Jobs.ToListAsync();
+            return await Mediator.Send(new List.Query());
         }
 
         // GET api/<JobController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> Get (Guid id)
         {
-            return await _context.Jobs.FindAsync(id);
+            return null;
         }
 
         // POST api/<JobController>
