@@ -48,8 +48,9 @@ namespace API.Controllers
 
         // DELETE api/<JobController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
+            return Ok(await Mediator.Send(new Delete.Command { Id = id}));
         }
     }
 }

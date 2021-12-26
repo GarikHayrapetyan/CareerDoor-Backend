@@ -13,6 +13,13 @@ namespace Application.Jobs
             public Job job{ get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.job).SetValidator(new JobValidator());
+            }
+        }
         public class Handler : IRequestHandler<Command, Unit>
         {
             private readonly DataContext _context;

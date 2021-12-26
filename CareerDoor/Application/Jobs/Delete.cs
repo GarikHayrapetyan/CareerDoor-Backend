@@ -1,27 +1,20 @@
-﻿using Domain;
-using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Persistence;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Jobs
 {
-    public class Create
+    public class Delete
     {
-        public class Command : IRequest {
-            public Job job { get; set; }
+        public class Command : IRequest
+        {
+            public Guid Id { get; set; }
         }
 
-        public class CommandValidator : AbstractValidator<Command> {
 
-            public CommandValidator()
-            {
-                RuleFor(x => x.job).SetValidator(new JobValidator());
-            }
-        }
-
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Unit>
         {
             private readonly DataContext _context;
 
@@ -31,10 +24,14 @@ namespace Application.Jobs
             }
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Jobs.Add(request.job);
+                var job = await _context.Jobs.FindAsync(request.Id);
+
+                _context.Remove(job);
                 await _context.SaveChangesAsync();
+
                 return Unit.Value;
             }
+           
         }
     }
 }
