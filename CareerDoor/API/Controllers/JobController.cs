@@ -19,23 +19,23 @@ namespace API.Controllers
            
         // GET: api/<JobController>
         [HttpGet]
-        public async Task<ActionResult<List<Job>>> GetJobs()
+        public async Task<IActionResult> GetJobs()
         {
-            return await Mediator.Send(new List.Query());
+            return HandleResult(await Mediator.Send(new List.Query()));
         }
 
         // GET api/<JobController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob (Guid id)
+        public async Task<IActionResult> GetJob (Guid id)
         {
-            return await Mediator.Send(new Details.Query { Id = id});
+            return HandleResult(await Mediator.Send(new Details.Query { Id = id}));
         }
 
         // POST api/<JobController>
         [HttpPost]
         public async Task<IActionResult> Create(Job job)
         {
-            return Ok(await Mediator.Send(new Create.Command { job=job}));
+            return HandleResult(await Mediator.Send(new Create.Command {job = job}));
         }
 
         // PUT api/<JobController>/5
@@ -43,14 +43,14 @@ namespace API.Controllers
         public async Task<IActionResult> Edit(Guid id, Job job)
         {
             job.Id = id;
-            return Ok(await Mediator.Send(new Edit.Command {job = job }));
+            return HandleResult(await Mediator.Send(new Edit.Command {job = job }));
         }
 
         // DELETE api/<JobController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Command { Id = id}));
+            return HandleResult(await Mediator.Send(new Delete.Command { Id = id}));
         }
     }
 }

@@ -1,11 +1,8 @@
-﻿using Domain;
+﻿using Application.Core;
+using Domain;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,12 +10,12 @@ namespace Application.Jobs
 {
     public class Details
     {
-        public class Query : IRequest<Job>
+        public class Query : IRequest<Result<Job>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Job>
+        public class Handler : IRequestHandler<Query, Result<Job>>
         {
             private readonly DataContext _context;
 
@@ -27,11 +24,10 @@ namespace Application.Jobs
                 _context = context;
             }
 
-            public async Task<Job> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<Job>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var job = await _context.Jobs.FindAsync(request.Id);
-
-                return job;
+                return Result<Job>.Success(job);
 
             }
         }

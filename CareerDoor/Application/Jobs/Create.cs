@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Core;
+using Domain;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -9,7 +10,7 @@ namespace Application.Jobs
 {
     public class Create
     {
-        public class Command : IRequest {
+        public class Command : IRequest<Result<Unit>> {
             public Job job { get; set; }
         }
 
@@ -21,7 +22,7 @@ namespace Application.Jobs
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command,Result<Unit>>
         {
             private readonly DataContext _context;
 
@@ -29,11 +30,18 @@ namespace Application.Jobs
             {
                 _context = context;
             }
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Jobs.Add(request.job);
-                await _context.SaveChangesAsync();
-                return Unit.Value;
+                _context.Jobs.Add(request.job);               
+
+                var success = await _context.SaveChangesAsync() > 0;
+
+                if (success)
+                {
+                    return Result<Unit>.Success(Unit.Value);
+                }
+
+                return Result<Unit>.Failure("Failed to save the meeting.");
             }
         }
     }
