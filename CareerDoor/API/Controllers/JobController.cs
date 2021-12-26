@@ -26,15 +26,16 @@ namespace API.Controllers
 
         // GET api/<JobController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> Get (Guid id)
+        public async Task<ActionResult<Job>> GetJob (Guid id)
         {
             return await Mediator.Send(new Details.Query { Id = id});
         }
 
         // POST api/<JobController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Create(Job job)
         {
+            return Ok(await Mediator.Send(new Create.Command { job=job}));
         }
 
         // PUT api/<JobController>/5
