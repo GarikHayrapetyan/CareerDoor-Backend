@@ -48,6 +48,8 @@ namespace Application.Core
                   .ForMember(d => d.Category, o => o.MapFrom(s => s.GetTogether.Description))
                   .ForMember(d => d.HostUsername, o => o.MapFrom(s => s.GetTogether.Attendees
                   .FirstOrDefault(x => x.IsHost).AppUser.UserName));
+
+            CreateMap<Job, Job>();
         }
     }
 }

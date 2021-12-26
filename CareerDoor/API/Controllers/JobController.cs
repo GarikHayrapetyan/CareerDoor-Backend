@@ -40,8 +40,10 @@ namespace API.Controllers
 
         // PUT api/<JobController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Edit(Guid id, Job job)
         {
+            job.Id = id;
+            return Ok(await Mediator.Send(new Edit.Command {job = job }));
         }
 
         // DELETE api/<JobController>/5
