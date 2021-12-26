@@ -28,7 +28,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> Get (Guid id)
         {
-            return null;
+            return await Mediator.Send(new Details.Query { Id = id});
         }
 
         // POST api/<JobController>
