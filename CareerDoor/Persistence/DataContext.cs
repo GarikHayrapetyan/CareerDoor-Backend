@@ -60,6 +60,18 @@ namespace Persistence
                 j.Property(p => p.Function).HasMaxLength(20);
                 j.Property(p => p.Industry).HasMaxLength(30);
             });
+
+            builder.Entity<JobCandidate>(x => x.HasKey(aa => new { aa.AppUserId, aa.JobId }));
+
+            builder.Entity<JobCandidate>()
+                .HasOne(u => u.AppUser)
+                .WithMany(a => a.Candidates)
+                .HasForeignKey(aa => aa.AppUserId);
+
+            builder.Entity<JobCandidate>()
+                .HasOne(u => u.Job)
+                .WithMany(a => a.Candidates)
+                .HasForeignKey(aa => aa.JobId);
         }
     } 
 }

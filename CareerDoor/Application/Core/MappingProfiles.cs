@@ -10,6 +10,7 @@ using System.Linq;
 using AutoMapper;
 using Domain;
 using Application.Profiles;
+using Application.Jobs;
 
 namespace Application.Core
 {
@@ -50,6 +51,7 @@ namespace Application.Core
                   .FirstOrDefault(x => x.IsHost).AppUser.UserName));
 
             CreateMap<Job, Job>();
+            CreateMap<Job,JobDto>();
         }
     }
 }

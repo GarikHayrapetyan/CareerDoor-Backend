@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Application.Profiles;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain
+
+namespace Application.Jobs
 {
-    public class Job
-    {
+    public class JobDto
+    {        
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
@@ -15,9 +14,10 @@ namespace Domain
         public string Function { get; set; }
         public string Company { get; set; }
         public string Industry { get; set; }
-        public string Location{ get; set; }
+        public string Location { get; set; }
         public DateTime Date { get; set; }
         public string EmployeeCount { get; set; }
-        public ICollection<JobCandidate> Candidates { get; set; } = new List<JobCandidate>();
+        public string EmployeerUsername { get; set; }
+        public ICollection<Profile> Profiles { get; set; } = new List<Profile>();
     }
 }
