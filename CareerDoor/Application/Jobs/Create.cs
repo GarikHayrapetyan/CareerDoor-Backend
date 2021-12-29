@@ -13,14 +13,14 @@ namespace Application.Jobs
     public class Create
     {
         public class Command : IRequest<Result<Unit>> {
-            public Job job { get; set; }
+            public Job Job { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command> {
 
             public CommandValidator()
             {
-                RuleFor(x => x.job).SetValidator(new JobValidator());
+                RuleFor(x => x.Job).SetValidator(new JobValidator());
             }
         }
 
@@ -41,13 +41,13 @@ namespace Application.Jobs
                 var candidate = new JobCandidate
                 {
                     AppUser = user,
-                    Job = request.job,
+                    Job = request.Job,
                     IsEmployer = true
                 };
 
-                request.job.Candidates.Add(candidate);
+                request.Job.Candidates.Add(candidate);
 
-                _context.Jobs.Add(request.job);               
+                _context.Jobs.Add(request.Job);               
 
                 var success = await _context.SaveChangesAsync() > 0;
 

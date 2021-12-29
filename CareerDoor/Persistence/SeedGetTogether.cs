@@ -12,9 +12,7 @@ namespace Persistence
         public static async Task Seed(DataContext context,
             UserManager<AppUser> userManager)
         {
-            if (!userManager.Users.Any() && !context.GetTogethers.Any())
-            {
-                var users = new List<AppUser>
+            var users = new List<AppUser>
                 {
                     new AppUser
                     {
@@ -35,6 +33,10 @@ namespace Persistence
                         Email = "tom@test.com"
                     },
                 };
+
+            if (!userManager.Users.Any() && !context.GetTogethers.Any())
+            {
+               
 
                 foreach (var user in users)
                 {
@@ -104,10 +106,10 @@ namespace Persistence
                 };
                 await context.GetTogethers.AddRangeAsync(getTogethers);
                 await context.SaveChangesAsync();
-            }
+           }
 
-            if (!context.Jobs.Any())
-            {
+           if (!userManager.Users.Any() && !context.Jobs.Any())
+           {
 
                 var jobs = new List<Job> {
                     new Job{
@@ -142,7 +144,19 @@ namespace Persistence
                            Function = "Backend",
                            Industry = "IT",
                            Location = "Warsaw",
-                           EmployeeCount = "100+"
+                           EmployeeCount = "100+",
+                           Candidates = new List<JobCandidate>{
+                                new JobCandidate
+                                {
+                                    AppUser = users[0],
+                                    IsEmployer = true
+                                },
+                                new JobCandidate
+                                {
+                                    AppUser = users[1],
+                                    IsEmployer = false
+                                },
+                           }
                     },
 
                     new Job{
@@ -177,7 +191,20 @@ namespace Persistence
                            Function = "Backend",
                            Industry = "IT",
                            Location = "Krakow",
-                           EmployeeCount = "150"
+                           EmployeeCount = "150",
+                           Candidates = new List<JobCandidate>{
+                                new JobCandidate
+                                {
+                                    AppUser = users[2],
+                                    IsEmployer = true
+                                },
+                                new JobCandidate
+                                {
+                                    AppUser = users[1],
+                                    IsEmployer = false
+                                },
+                           }
+
                     },
 
                         new Job{
@@ -212,7 +239,19 @@ namespace Persistence
                            Function = "Frontend",
                            Industry = "IT",
                            Location = "London",
-                           EmployeeCount = "520"
+                           EmployeeCount = "520",
+                           Candidates = new List<JobCandidate>{
+                                new JobCandidate
+                                {
+                                    AppUser = users[1],
+                                    IsEmployer = true
+                                },
+                                new JobCandidate
+                                {
+                                    AppUser = users[2],
+                                    IsEmployer = false
+                                },
+                           }
                     }
 
                 };

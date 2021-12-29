@@ -12,14 +12,14 @@ namespace Application.Jobs
     public class Edit
     {
         public class Command: IRequest<Result<Unit>> {
-            public Job job{ get; set; }
+            public Job Job{ get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.job).SetValidator(new JobValidator());
+                RuleFor(x => x.Job).SetValidator(new JobValidator());
             }
         }
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -36,14 +36,14 @@ namespace Application.Jobs
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var job = await _context.Jobs.FindAsync(request.job.Id);
+                var job = await _context.Jobs.FindAsync(request.Job.Id);
 
                 if (job == null)
                 {
                     return null;
                 }
 
-                _mapper.Map(request.job, job);
+                _mapper.Map(request.Job, job);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
