@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain
 {
@@ -18,6 +15,7 @@ namespace Domain
         public string Location{ get; set; }
         public DateTime Date { get; set; }
         public string EmployeeCount { get; set; }
+        public bool IsCanceled { get; set; }
         public ICollection<JobCandidate> Candidates { get; set; } = new List<JobCandidate>();
     }
 }

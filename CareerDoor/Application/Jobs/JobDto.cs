@@ -18,6 +18,7 @@ namespace Application.Jobs
         public DateTime Date { get; set; }
         public string EmployeeCount { get; set; }
         public string EmployeerUsername { get; set; }
+        public bool IsCanceled { get; set; }
         public ICollection<Profile> Candidates { get; set; }
     }
 }
