@@ -17,6 +17,7 @@ namespace Persistence
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserFollowing> UserFollowings { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<JobCandidate> JobCandidate { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

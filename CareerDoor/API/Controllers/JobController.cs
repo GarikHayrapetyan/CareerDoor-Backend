@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
+    //[AllowAnonymous]
     public class JobController : BaseApiController
     {
            
@@ -39,6 +39,7 @@ namespace API.Controllers
         }
 
         // PUT api/<JobController>/5
+        [Authorize(Policy = "IsJobEmployer")]        
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(Guid id, Job job)
         {
@@ -47,6 +48,7 @@ namespace API.Controllers
         }
 
         // DELETE api/<JobController>/5
+        [Authorize(Policy = "IsJobEmployer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

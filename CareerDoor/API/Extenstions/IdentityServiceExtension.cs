@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using System.Text;
 using System.Threading.Tasks;
+using static Infrastructure.Security.IsEmployerRequirement;
 using static Infrastructure.Security.IsHostRequirement;
 
 namespace API.Extenstions
@@ -56,10 +57,15 @@ namespace API.Extenstions
                 {
                     policy.Requirements.Add(new IsHostRequirement());
                 });
+
+                opt.AddPolicy("IsJobEmployer",policy => {
+                    policy.Requirements.Add(new IsEmployerRequirement());
+                });
             });
 
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
-            
+            services.AddTransient<IAuthorizationHandler, IsEmployerRequirementHandler>();
+
             return services;
         }
     }
