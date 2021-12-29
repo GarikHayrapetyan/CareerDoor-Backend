@@ -18,6 +18,6 @@ namespace Application.Jobs
         public DateTime Date { get; set; }
         public string EmployeeCount { get; set; }
         public string EmployeerUsername { get; set; }
-        public ICollection<Profile> Profiles { get; set; } = new List<Profile>();
+        public ICollection<Profile> Candidates { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Core;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +29,10 @@ namespace Application.Jobs
             public async Task<Result<List<JobDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var jobs = await _context.Jobs
-                    .Include(x => x.Candidates)
-                    .ThenInclude(x=>x.AppUser)
+                    .ProjectTo<JobDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 
-                var jobsToReturn = _mapper.Map<List<JobDto>>(jobs);
-
-                return Result<List<JobDto>>.Success(jobsToReturn);
+              return Result<List<JobDto>>.Success(jobs);
             }
         }
     }

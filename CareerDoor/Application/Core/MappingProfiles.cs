@@ -51,7 +51,13 @@ namespace Application.Core
                   .FirstOrDefault(x => x.IsHost).AppUser.UserName));
 
             CreateMap<Job, Job>();
-            CreateMap<Job,JobDto>();
+            CreateMap<Job,JobDto>()
+                .ForMember(d=>d.EmployeerUsername, o=>o.MapFrom(s=>s.Candidates.FirstOrDefault(x=>x.IsEmployer).AppUser.UserName));
+            CreateMap<JobCandidate, Profiles.Profile>()
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
+                .ForMember(d => d.Bio, o => o.MapFrom(s => s.AppUser.Bio))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url));
         }
     }
 }
