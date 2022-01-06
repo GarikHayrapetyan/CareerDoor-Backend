@@ -2,7 +2,6 @@
 using Application.Photos;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-//using CloudinaryDotNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;

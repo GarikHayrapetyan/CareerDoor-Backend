@@ -7,6 +7,8 @@ namespace Domain
     {
         public string DisplayName { get; set; }
         public string Bio { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
 
         public ICollection<GetTogetherAttendee> GetTogethers { get; set; }
         public ICollection<JobCandidate> Candidates { get; set; }
