@@ -3,6 +3,7 @@ using Application.GetTogethers;
 using Application.Interfaces;
 using Infrastructure.Cloud;
 using Infrastructure.Photos;
+using Infrastructure.Resumes;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,7 @@ namespace API.Extenstions
                 });
             });
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IResumeAccessor, ResumeAccessor>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddSignalR();
             return services;
