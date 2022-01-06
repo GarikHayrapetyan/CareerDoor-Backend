@@ -14,6 +14,7 @@ namespace Persistence
         public DbSet<GetTogether> GetTogethers { get; set; }
         public DbSet<GetTogetherAttendee> GetTogetherAttendees { get; set; }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Resume> Resumes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserFollowing> UserFollowings { get; set; }
         public DbSet<Job> Jobs { get; set; }
