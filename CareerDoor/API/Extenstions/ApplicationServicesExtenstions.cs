@@ -1,6 +1,7 @@
 ﻿using Application.Core;
 using Application.GetTogethers;
 using Application.Interfaces;
+using Infrastructure.Cloud;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
