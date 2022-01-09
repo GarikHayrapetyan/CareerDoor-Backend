@@ -44,7 +44,8 @@ namespace Application.Resumes
                 var resume = new Resume
                 {
                     Url = resumeUploadResult.Url,
-                    Id = resumeUploadResult.PublicId
+                    Id = resumeUploadResult.PublicId,
+                    FileName = resumeUploadResult.FileName
                 };
 
                 

@@ -45,7 +45,8 @@ namespace Infrastructure.Resumes
                 return new ResumeUploadResult
                 {
                     PublicId = uploadResult.PublicId,
-                    Url = uploadResult.SecureUrl.ToString()
+                    Url = uploadResult.SecureUrl.ToString(),
+                    FileName = uploadResult.OriginalFilename
                 };
             };
 
