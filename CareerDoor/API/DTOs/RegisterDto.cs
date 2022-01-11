@@ -21,5 +21,11 @@ namespace API.DTOs
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        public string Country { get; set; }
+
+        [Required]
+        public string City { get; set; }
     }
 }
