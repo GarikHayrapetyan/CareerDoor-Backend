@@ -19,6 +19,7 @@ namespace Persistence
         public DbSet<UserFollowing> UserFollowings { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobCandidate> JobCandidate { get; set; }
+        public DbSet<ResetPassword> ResetPasswords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
