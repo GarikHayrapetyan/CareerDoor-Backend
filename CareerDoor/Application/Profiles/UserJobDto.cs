@@ -15,6 +15,6 @@ namespace Application.Profiles
         public DateTime Date { get; set; }
 
         [JsonIgnore]
-        public string EmplyerUsername { get; set; }
+        public string EmployerUsername { get; set; }
     }
 }
