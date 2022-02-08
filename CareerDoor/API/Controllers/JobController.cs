@@ -1,4 +1,5 @@
-﻿using Application.Jobs;
+﻿using Application.Core;
+using Application.Jobs;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ namespace API.Controllers
            
         // GET: api/<JobController>
         [HttpGet]
-        public async Task<IActionResult> GetJobs()
+        public async Task<IActionResult> GetJobs([FromQuery]JobParams param)
         {
-            return HandleResult(await Mediator.Send(new List.Query()));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params=param}));
         }
 
         // GET api/<JobController>/5
