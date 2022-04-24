@@ -26,7 +26,6 @@ namespace Infrastructure.Email
             {
                 Host = "smtp.gmail.com",
                 Port = 587,
-                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(fromEmail, fromPassword),
                 EnableSsl = true
                 

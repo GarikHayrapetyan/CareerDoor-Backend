@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Persistence;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -19,17 +20,17 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
+        private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
-        private readonly IConfiguration _config;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService,IConfiguration config)
+        public AccountController(DataContext context,UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
-            _config = config;
         }
 
         [AllowAnonymous]
@@ -88,20 +89,47 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("sendResetPassword")]
+        [HttpPost("sendResetPassword")]       
         public async Task<IActionResult> SendPasswordResetCode(string email)
         {
+            if (string.IsNullOrEmpty(email)) {
 
-            // to do: Send token in email
-            await EmailSender.SendEmailAsync(email, "Reset Password OTP", "Hello "
-                + email + "<br><br>Please find the reset password token below<br><br><b>"
-                + "<b><br><br>Thanks<br>oktests.com");
+                return BadRequest("Email cannot be empty.");
+            }
 
-            return Ok("Token sent successfully in email");
+            if (await _userManager.Users.AnyAsync(x=>x.Email==email))
+            {
+                var user = await _userManager.Users.FirstAsync(x=>x.Email==email);
+
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var otp = EmailResetOTP.GenerateOTP();
+                var resetPassword = new ResetPassword()
+                {
+                    UserId = user.Id,
+                    OTP = otp,
+                    Email = email,
+                    ResetToken = resetToken,
+                    InsertDateTimeUTC = DateTime.UtcNow
+                    
+                };
+
+                _context.ResetPasswords.Add(resetPassword);
+                await _context.SaveChangesAsync();            
+
+                await EmailSender.SendEmailAsync(email, "CareerDoor One Time Password", "Hello "
+                    + email + $"<br><br>Here is your One Time Password<br><strong>{otp}<strong><br><br><br>CareerDoor.com<br>");
+
+                return Ok("Token sent successfully in email");
+            }
+
+
+            return Ok();
+
+            
         }
 
         [AllowAnonymous]
-        [HttpPost("resetpassword")]
+        [HttpPost("resetPassword")]
         public async Task<IActionResult> PasswordResetCode(string email) {
 
           
