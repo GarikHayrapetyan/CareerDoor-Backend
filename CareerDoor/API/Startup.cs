@@ -11,6 +11,7 @@ using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using API.SignalR;
+using Infrastructure.Email;
 
 namespace API
 {
@@ -19,6 +20,7 @@ namespace API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            EmailSender.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }

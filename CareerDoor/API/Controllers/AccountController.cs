@@ -1,10 +1,12 @@
 ﻿using API.DTOs;
 using API.Services;
 using Domain;
+using Infrastructure.Email;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -20,12 +22,14 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
+        private readonly IConfiguration _config;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService,IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _config = config;
         }
 
         [AllowAnonymous]
@@ -84,6 +88,19 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("sendResetPassword")]
+        public async Task<IActionResult> SendPasswordResetCode(string email)
+        {
+
+            // to do: Send token in email
+            await EmailSender.SendEmailAsync(email, "Reset Password OTP", "Hello "
+                + email + "<br><br>Please find the reset password token below<br><br><b>"
+                + "<b><br><br>Thanks<br>oktests.com");
+
+            return Ok("Token sent successfully in email");
+        }
+
+        [AllowAnonymous]
         [HttpPost("resetpassword")]
         public async Task<IActionResult> PasswordResetCode(string email) {
 
@@ -95,6 +112,9 @@ namespace API.Controllers
 
             return Ok();
 ;        }
+
+
+
 
 
         [Authorize]
