@@ -11,7 +11,7 @@ using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using API.SignalR;
-using Infrastructure.Email;
+using Application.Core;
 
 namespace API
 {

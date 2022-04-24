@@ -10,12 +10,11 @@ using System.Threading.Tasks;
 
 namespace Application.Profiles
 {
-    public class Reset
+    public class ResetEmail
     {
         public class Command : IRequest<Result<Unit>> {
             
             public string Email { get; set; }
-            public string OTP { get; set; }
             public UserManager<AppUser> UserManager { get; set; }
         }
 
@@ -47,9 +46,9 @@ namespace Application.Profiles
 
                 var resetToken = await request.UserManager.GeneratePasswordResetTokenAsync(user);
 
-                string otp = request.OTP;
+                string otp = EmailResetOTP.GenerateOTP();
 
-                var resetPassword = new ResetPassword
+                var resetPassword = new Domain.ResetPassword
                 {
                     Email = request.Email,
                     UserId = user.Id,
@@ -63,7 +62,11 @@ namespace Application.Profiles
 
                 if (success)
                 {
-                    
+                    var subject = "CareerDoor One Time Password";
+                    var htmlMessage = "Hello "+ request.Email 
+                        + $"<br><br>Here is your One Time Password<br><strong>{otp}<strong><br><br><br>CareerDoor.com<br>";
+
+                    await EmailSender.SendEmailAsync(request.Email, subject, htmlMessage);
 
                     return Result<Unit>.Success(Unit.Value);
                 }

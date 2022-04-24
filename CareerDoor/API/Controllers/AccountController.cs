@@ -1,13 +1,12 @@
 ﻿using API.DTOs;
 using API.Services;
+using Application.Profiles;
 using Domain;
-using Application.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace API.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
     {
         private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
@@ -91,76 +90,20 @@ namespace API.Controllers
         [HttpPost("sendResetPassword")]       
         public async Task<IActionResult> SendPasswordResetCode(string email)
         {
-            if (string.IsNullOrEmpty(email)) {
-
-                return BadRequest("Email cannot be empty.");
-            }
-
-            if (await _userManager.Users.AnyAsync(x=>x.Email==email))
-            {
-                var user = await _userManager.Users.FirstAsync(x=>x.Email==email);
-
-                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var otp = EmailResetOTP.GenerateOTP();
-                var resetPassword = new ResetPassword()
-                {
-                    UserId = user.Id,
-                    OTP = otp,
-                    Email = email,
-                    ResetToken = resetToken,
-                    InsertDateTimeUTC = DateTime.UtcNow
-                    
-                };
-
-                _context.ResetPasswords.Add(resetPassword);
-                await _context.SaveChangesAsync();            
-
-                await EmailSender.SendEmailAsync(email, "CareerDoor One Time Password", "Hello "
-                    + email + $"<br><br>Here is your One Time Password<br><strong>{otp}<strong><br><br><br>CareerDoor.com<br>");
-
-                return Ok("OTP sent successfully in email");
-            }
-
-
-            return Ok();
-
-            
+            return HandleResult(await Mediator.Send(new ResetEmail.Command { Email = email, UserManager = _userManager }));
         }
 
         [AllowAnonymous]
         [HttpPost("resetPassword")]
         public async Task<IActionResult> PasswordResetCode(string email,string otp, string newPassword) {
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp) || string.IsNullOrEmpty(newPassword)) {
-                return BadRequest("Email, OTP and new password cannot be empty.");            
-            }
-
-            var user = await _userManager.Users.FirstOrDefaultAsync(x=>x.Email==email);
-
-            var resetPassword = await _context.ResetPasswords
-                .Where(x => x.UserId == user.Id && x.OTP == otp)
-                .OrderByDescending(x => x.InsertDateTimeUTC)
-                .FirstOrDefaultAsync();
-
-            var otpExpirationTime = resetPassword.InsertDateTimeUTC.AddMinutes(150);
-
-            if (otpExpirationTime<DateTime.UtcNow) {
-                return BadRequest("OTP is expired.");
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user,resetPassword.ResetToken,newPassword);
-
-            if (!result.Succeeded) {
-                return BadRequest("Problem reseting the new password.");
-            }
-            
-
-            return Ok("Password is reset successfully.");
+            return HandleResult(await Mediator.Send(
+                new Application.Profiles.ResetPassword.Command { 
+                    Email=email,
+                    OTP=otp,
+                    NewPassword=newPassword,
+                    UserManager=_userManager}));
 ;        }
-
-
-
-
 
         [Authorize]
         [HttpGet]
@@ -171,6 +114,7 @@ namespace API.Controllers
 
             return CreateUserObject(user);
         }
+
 
         [NonAction]
         public UserDto CreateUserObject(AppUser user)
