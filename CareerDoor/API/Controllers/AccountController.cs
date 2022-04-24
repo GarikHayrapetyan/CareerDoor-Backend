@@ -1,12 +1,11 @@
 ﻿using API.DTOs;
 using API.Services;
 using Domain;
-using Infrastructure.Email;
+using Application.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Persistence;
 using System;
 using System.Linq;
@@ -15,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-     
+
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -119,7 +118,7 @@ namespace API.Controllers
                 await EmailSender.SendEmailAsync(email, "CareerDoor One Time Password", "Hello "
                     + email + $"<br><br>Here is your One Time Password<br><strong>{otp}<strong><br><br><br>CareerDoor.com<br>");
 
-                return Ok("Token sent successfully in email");
+                return Ok("OTP sent successfully in email");
             }
 
 

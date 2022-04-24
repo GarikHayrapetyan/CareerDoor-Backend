@@ -5,9 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Persistence;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +13,9 @@ namespace Application.Profiles
     public class Reset
     {
         public class Command : IRequest<Result<Unit>> {
+            
             public string Email { get; set; }
+            public string OTP { get; set; }
             public UserManager<AppUser> UserManager { get; set; }
         }
 
@@ -48,7 +47,7 @@ namespace Application.Profiles
 
                 var resetToken = await request.UserManager.GeneratePasswordResetTokenAsync(user);
 
-                string otp = new Random().Next(100000, 999999).ToString();
+                string otp = request.OTP;
 
                 var resetPassword = new ResetPassword
                 {
@@ -64,7 +63,7 @@ namespace Application.Profiles
 
                 if (success)
                 {
-                    ////Send email
+                    
 
                     return Result<Unit>.Success(Unit.Value);
                 }
