@@ -130,15 +130,33 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost("resetPassword")]
-        public async Task<IActionResult> PasswordResetCode(string email) {
+        public async Task<IActionResult> PasswordResetCode(string email,string otp, string newPassword) {
 
-          
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp) || string.IsNullOrEmpty(newPassword)) {
+                return BadRequest("Email, OTP and new password cannot be empty.");            
+            }
 
-       
+            var user = await _userManager.Users.FirstOrDefaultAsync(x=>x.Email==email);
 
+            var resetPassword = await _context.ResetPasswords
+                .Where(x => x.UserId == user.Id && x.OTP == otp)
+                .OrderByDescending(x => x.InsertDateTimeUTC)
+                .FirstOrDefaultAsync();
+
+            var otpExpirationTime = resetPassword.InsertDateTimeUTC.AddMinutes(150);
+
+            if (otpExpirationTime<DateTime.UtcNow) {
+                return BadRequest("OTP is expired.");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user,resetPassword.ResetToken,newPassword);
+
+            if (!result.Succeeded) {
+                return BadRequest("Problem reseting the new password.");
+            }
             
 
-            return Ok();
+            return Ok("Password is reset successfully.");
 ;        }
 
 
