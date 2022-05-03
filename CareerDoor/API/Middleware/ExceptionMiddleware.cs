@@ -26,6 +26,7 @@ namespace API.Middleware
         public async Task InvokeAsync(HttpContext context) {
             try
             {
+              
                 await next.Invoke(context);
             }
             catch (Exception ex)

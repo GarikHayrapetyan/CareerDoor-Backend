@@ -36,6 +36,8 @@ namespace Infrastructure.Security
                     .SingleOrDefaultAsync(x => x.AppUserId == userId && x.JobId == jobId)
                     .Result;
 
+                candidate.AppUserId = userId;
+
                 if (candidate == null) return Task.CompletedTask;
 
                 if (candidate.IsEmployer) context.Succeed(requirement);

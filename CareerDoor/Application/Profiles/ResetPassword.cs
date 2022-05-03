@@ -51,6 +51,11 @@ namespace Application.Profiles
                     .OrderByDescending(x => x.InsertDateTimeUTC)
                     .FirstOrDefaultAsync();
 
+                if (resetPassword==null)
+                {
+                    return Result<Unit>.Failure("OTP is not correct.");
+                }
+
                 var otpExpirationTime = resetPassword.InsertDateTimeUTC.AddMinutes(150);
 
                 if (otpExpirationTime < DateTime.UtcNow)

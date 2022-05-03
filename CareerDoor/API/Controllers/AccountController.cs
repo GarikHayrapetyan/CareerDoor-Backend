@@ -23,7 +23,7 @@ namespace API.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
 
-        public AccountController(DataContext context,UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
+        public AccountController(DataContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
         {
             _context = context;
             _userManager = userManager;
@@ -87,21 +87,21 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("sendResetPassword")]       
-        public async Task<IActionResult> SendPasswordResetCode(string email)
+        [HttpPost("sendResetPassword")]
+        public async Task<IActionResult> SendPasswordResetCode(EmailDto emailDto)
         {
-            return HandleResult(await Mediator.Send(new ResetEmail.Command { Email = email, UserManager = _userManager }));
+            return HandleResult(await Mediator.Send(new ResetEmail.Command { Email = emailDto.Email, UserManager = _userManager }));
         }
 
         [AllowAnonymous]
         [HttpPost("resetPassword")]
-        public async Task<IActionResult> PasswordResetCode(string email,string otp, string newPassword) {
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto) {
 
             return HandleResult(await Mediator.Send(
                 new Application.Profiles.ResetPassword.Command { 
-                    Email=email,
-                    OTP=otp,
-                    NewPassword=newPassword,
+                    Email= resetPasswordDto.Email,
+                    OTP= resetPasswordDto.OTP,
+                    NewPassword=resetPasswordDto.NewPassword,
                     UserManager=_userManager}));
 ;        }
 
