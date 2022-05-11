@@ -7,8 +7,9 @@ namespace API.Controllers
     public class ProfilesController : BaseApiController
     {
         [HttpGet("{username}")]
-        public async Task<IActionResult> GetProfile(string username) {
-            return HandleResult(await Mediator.Send(new Details.Query { UserName=username}));
+        public async Task<IActionResult> GetProfile(string username)
+        {
+            return HandleResult(await Mediator.Send(new Details.Query { UserName = username }));
         }
 
         [HttpPut]
@@ -18,9 +19,15 @@ namespace API.Controllers
         }
 
         [HttpGet("{username}/gettogethers")]
-        public async Task<IActionResult> GetUserActivities(string username,string predicate)
+        public async Task<IActionResult> GetUserActivities(string username, string predicate)
         {
-            return HandleResult(await Mediator.Send(new ListActivities.Query{ Username = username, Predicate = predicate }));
+            return HandleResult(await Mediator.Send(new ListActivities.Query { Username = username, Predicate = predicate }));
+        }
+
+        [HttpGet("{username}/jobs")]
+        public async Task<IActionResult> GetUserJobs(string username, string predicate)
+        {
+            return HandleResult(await Mediator.Send(new ListJobs.Query { Username = username, Predicate = predicate }));
         }
     }
 }

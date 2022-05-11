@@ -40,7 +40,7 @@ namespace Application.Jobs
                     .ProjectTo<JobDto>(_mapper.ConfigurationProvider,new { currentUsername = _userAccessor.GetUsername()})
                     .AsQueryable();
 
-                var x = 0;
+
                 if (request.Params.IsCandidate && !request.Params.IsEmployer) {
                     query = query.Where(x=>x.Candidates.Any(c=>c.Username == _userAccessor.GetUsername()));
                 }
