@@ -55,6 +55,7 @@ namespace Application.Core
             CreateMap<Job, Job>();
             CreateMap<Job, JobDto>()
                 .ForMember(d => d.EmployeerUsername, o => o.MapFrom(s => s.Candidates.FirstOrDefault(x => x.IsEmployer).AppUser.UserName));
+
             CreateMap<JobCandidate, Profiles.Profile>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))

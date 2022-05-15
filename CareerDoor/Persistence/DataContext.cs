@@ -60,7 +60,7 @@ namespace Persistence
             builder.Entity<Job>(j=> {
                 j.Property(p => p.Title).HasMaxLength(30);
                 j.Property(p => p.Company).HasMaxLength(40);
-                j.Property(p => p.Function).HasMaxLength(20);
+                j.Property(p => p.Functionality).HasMaxLength(20);
                 j.Property(p => p.Industry).HasMaxLength(30);
             });
 
