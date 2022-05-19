@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,14 +17,12 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class AccountController : BaseApiController
     {
-        private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
 
-        public AccountController(DataContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
         {
-            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;

@@ -17,6 +17,10 @@ namespace Application.Core
             TotalCount = count;
             AddRange(items);
         }
+        public PagedList()
+        {
+
+        }
 
         public int CurrentPage { get; set; }
         public int TotalPage { get; set; }
