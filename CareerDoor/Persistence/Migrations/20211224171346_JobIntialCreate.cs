@@ -14,7 +14,7 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Function = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Functionality = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Company = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
                     Industry = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),

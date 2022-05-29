@@ -14,13 +14,23 @@ namespace Application.Profiles
         public class Command : IRequest<Result<Unit>>
         {
             public string DisplayName { get; set; }
+            public string City { get; set; }
+            public string Country { get; set; }
             public string Bio { get; set; }
         }
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.DisplayName).NotEmpty();
+                RuleFor(x => x.DisplayName)
+                    .NotEmpty()
+                    .MaximumLength(40);
+                RuleFor(x => x.City)
+                    .NotEmpty()
+                    .MaximumLength(60);
+                RuleFor(x => x.Country)
+                    .NotEmpty()
+                    .MaximumLength(60);
             }
         }
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -39,6 +49,8 @@ namespace Application.Profiles
 
                 user.Bio = request.Bio ?? user.Bio;
                 user.DisplayName = request.DisplayName ?? user.DisplayName;
+                user.City = request.City ?? user.City;
+                user.Country = request.Country ?? user.Country;
                 _context.Entry(user).State = EntityState.Modified;
                 var success = await _context.SaveChangesAsync() > 0;
                 if (success) return Result<Unit>.Success(Unit.Value);
