@@ -25,9 +25,9 @@ namespace API.Controllers
         }
 
         [HttpGet("userjobs")]
-        public async Task<IActionResult> GetUserJobs(string username, string predicate)
+        public async Task<IActionResult> GetUserJobs([FromQuery] JobParams param)
         {
-            return HandleResult(await Mediator.Send(new ListJobs.Query { Username = username, Predicate = predicate }));
+            return HandlePagedResult(await Mediator.Send(new ListJobs.Query { Params = param }));
         }
     }
 }

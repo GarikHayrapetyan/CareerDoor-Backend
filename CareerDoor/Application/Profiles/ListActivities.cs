@@ -50,7 +50,6 @@ namespace Application.Profiles
                 return Result<PagedList<UserActivityDto>>.Success(
                         await PagedList<UserActivityDto>.CreateAsync(query, param.PageNumber,
                         param.PageSize));
-                //return Result<List<UserActivityDto>>.Success(activities);
             }
 
         }

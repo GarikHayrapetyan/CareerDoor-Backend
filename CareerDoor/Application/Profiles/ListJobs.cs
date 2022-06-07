@@ -14,14 +14,13 @@ namespace Application.Profiles
 {
     public class ListJobs
     {
-        public class Query : IRequest<Result<List<UserJobDto>>>
+        public class Query : IRequest<Result<PagedList<UserJobDto>>>
         {
-            public string Username { get; set; }
-            public string Predicate { get; set; }
+            public JobParams Params { get; set; }
         }
 
 
-        public class Handler : IRequestHandler<Query, Result<List<UserJobDto>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<UserJobDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -30,25 +29,27 @@ namespace Application.Profiles
                 _mapper = mapper;
                 _context = context;
             }
-            public async Task<Result<List<UserJobDto>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<UserJobDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
+                var param = request.Params;
                 var query = _context.JobCandidate
-                .Where(u => u.AppUser.UserName == request.Username)
+                .Where(u => u.AppUser.UserName == param.Username)
                 .OrderBy(a => a.Job.Date)
                 .ProjectTo<UserJobDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
-                query = request.Predicate switch
+                query = param.Predicate switch
                 {
                     "applied" => query.Where(a => a.EmployerUsername !=
-                    request.Username),
+                    param.Username),
                     "employer" => query.Where(a => a.EmployerUsername ==
-                    request.Username)
+                    param.Username)
                 };
-                var jobs = await query.ToListAsync();
-                return Result<List<UserJobDto>>.Success(jobs);
-            }
-
+ 
+                return Result<PagedList<UserJobDto>>.Success(
+                        await PagedList<UserJobDto>.CreateAsync(query, param.PageNumber,
+                        param.PageSize));
+            }            
         }
     }
 }
