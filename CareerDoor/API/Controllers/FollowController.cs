@@ -1,5 +1,6 @@
 ﻿using Application.Followers;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -13,9 +14,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{username}")]
-        public async Task<IActionResult> GetFollowings(string username, string predicate)
-        {
-            return HandleResult(await Mediator.Send(new List.Query { Username = username, Predicate = predicate }));
+        public async Task<IActionResult> GetFollowings([FromQuery] FollowParams param,CancellationToken token)
+        { 
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }, token));
         }
     }
 }

@@ -36,6 +36,7 @@ namespace Application.Resumes
                 var user = await _context.Users.Include(p => p.Resumes)
                     .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
+
                 if (user == null) return null;
 
                 var resume = user.Resumes.FirstOrDefault(x => x.Id == request.Id);
@@ -48,6 +49,7 @@ namespace Application.Resumes
                 if (result == null) return Result<Unit>.Failure("Problem deleting resume from Cloudinary");
 
                 user.Resumes.Remove(resume);
+                _context.Resumes.Remove(resume);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

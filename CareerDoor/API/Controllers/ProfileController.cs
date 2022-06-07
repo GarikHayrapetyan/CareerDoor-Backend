@@ -18,13 +18,13 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(command));
         }
 
-        [HttpGet("{username}/gettogethers")]
-        public async Task<IActionResult> GetUserActivities(string username, string predicate)
+        [HttpGet("usermeetings")]
+        public async Task<IActionResult> GetUserActivities([FromQuery] GetTogetherParams param)
         {
-            return HandleResult(await Mediator.Send(new ListActivities.Query { Username = username, Predicate = predicate }));
+            return HandlePagedResult(await Mediator.Send(new ListActivities.Query { Params = param }));
         }
 
-        [HttpGet("{username}/jobs")]
+        [HttpGet("userjobs")]
         public async Task<IActionResult> GetUserJobs(string username, string predicate)
         {
             return HandleResult(await Mediator.Send(new ListJobs.Query { Username = username, Predicate = predicate }));

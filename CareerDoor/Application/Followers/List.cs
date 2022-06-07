@@ -14,13 +14,12 @@ namespace Application.Followers
 {
     public class List
     {
-        public class Query : IRequest<Result<List<Profiles.Profile>>>
+        public class Query : IRequest<Result<PagedList<Profiles.Profile>>>
         {
-            public string Predicate { get; set; }
-            public string Username { get; set; }
+            public FollowParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<List<Profiles.Profile>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<Profiles.Profile>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -33,27 +32,30 @@ namespace Application.Followers
                 _userAccessor = userAccessor;
             }
 
-            public async Task<Result<List<Profiles.Profile>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<Profiles.Profile>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var profiles = new List<Profiles.Profile>();
+                IQueryable<Profiles.Profile> profiles;
+                var param = request.Params;
 
-                switch (request.Predicate)
+                switch (param.Predicate)
                 {
                     case "followers":
-                        profiles = await _context.UserFollowings.Where(x => x.Target.UserName == request.Username)
+                        profiles = _context.UserFollowings.Where(x => x.Target.UserName == param.Username)
                             .Select(u => u.Observer)
                             .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
-                            .ToListAsync();
-                        break;
+                            .AsQueryable();
+                        return Result<PagedList<Profiles.Profile>>.Success(await PagedList<Profiles.Profile>
+                   .CreateAsync(profiles, param.PageNumber, param.PageSize));
                     case "following":
-                        profiles = await _context.UserFollowings.Where(x => x.Observer.UserName == request.Username)
+                        profiles = _context.UserFollowings.Where(x => x.Observer.UserName == param.Username)
                             .Select(u => u.Target)
                             .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
-                            .ToListAsync();
-                        break;
+                            .AsQueryable();
+                        return Result<PagedList<Profiles.Profile>>.Success(await PagedList<Profiles.Profile>
+                   .CreateAsync(profiles, param.PageNumber, param.PageSize));
+                    default:
+                        return Result<PagedList<Profiles.Profile>>.Failure("Non detected predicate.");
                 }
-
-                return Result<List<Profiles.Profile>>.Success(profiles);
             }
         }
     }

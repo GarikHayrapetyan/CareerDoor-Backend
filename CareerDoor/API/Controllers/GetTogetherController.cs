@@ -1,5 +1,4 @@
-﻿using Application.Core;
-using Application.GetTogethers;
+﻿using Application.GetTogethers;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
