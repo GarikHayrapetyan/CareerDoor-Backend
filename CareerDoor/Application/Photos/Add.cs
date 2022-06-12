@@ -42,6 +42,11 @@ namespace Application.Photos
                     return null;
                 }
 
+                if (user.Photos.Count>=2)
+                {
+                    return Result<Photo>.Failure("Max count photos is 2.");
+                }
+
                 var photoUploadResult = await _photoAccessor.AddPhoto(request.File);
 
                 var photo = new Photo

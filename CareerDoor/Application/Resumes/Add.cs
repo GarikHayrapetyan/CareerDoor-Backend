@@ -39,6 +39,11 @@ namespace Application.Resumes
                     return null;
                 }
 
+                if (user.Resumes.Count >= 10)
+                {
+                    return Result<Resume>.Failure("Max count document is 10.");
+                }
+
                 var resumeUploadResult = await _resumeAccessor.AddResume(request.File);
 
                 var resume = new Resume
