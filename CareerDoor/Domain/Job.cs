@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
@@ -13,7 +14,9 @@ namespace Domain
         public string Company { get; set; }
         public string Industry { get; set; }
         public string Location{ get; set; }
-        public DateTime Date { get; set; }
+        public string Experience { get; set; }
+        public DateTime Expiration { get; set; }
+        public DateTime Creation { get; set; }
         public string EmployeeCount { get; set; }
         public bool IsCanceled { get; set; }
         public ICollection<JobCandidate> Candidates { get; set; } = new List<JobCandidate>();

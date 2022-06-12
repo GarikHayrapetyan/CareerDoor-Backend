@@ -11,6 +11,6 @@ namespace Application.Jobs
     {
         public bool IsCandidate { get; set; }
         public bool IsEmployer { get; set; }
-        public DateTime ExpirationDate { get; set; } = DateTime.UtcNow;
+       // public DateTime ExpirationDate { get; set; } = DateTime.UtcNow;
     }
 } 

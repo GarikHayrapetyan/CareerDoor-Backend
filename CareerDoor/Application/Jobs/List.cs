@@ -6,6 +6,7 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -35,8 +36,8 @@ namespace Application.Jobs
             public async Task<Result<PagedList<JobDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var query = _context.Jobs
-                    .Where(d=>d.Date >=request.Params.ExpirationDate)
-                    .OrderBy(d => d.Date)
+                    .Where(d=>d.Expiration >= DateTime.UtcNow)
+                    .OrderBy(d => d.Creation)
                     .ProjectTo<JobDto>(_mapper.ConfigurationProvider,new { currentUsername = _userAccessor.GetUsername()})
                     .AsQueryable();
 

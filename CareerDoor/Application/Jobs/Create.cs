@@ -5,6 +5,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,6 +37,8 @@ namespace Application.Jobs
             }
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                request.Job.Creation = DateTime.UtcNow;
+
                 var user = await _context.Users.FirstOrDefaultAsync(x=>x.UserName == _userAccessor.GetUsername());
 
                 var candidate = new JobCandidate

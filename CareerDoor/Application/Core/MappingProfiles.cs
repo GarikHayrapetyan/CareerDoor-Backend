@@ -64,7 +64,7 @@ namespace Application.Core
             CreateMap<JobCandidate, UserJobDto>()
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.Job.Id))
                 .ForMember(d => d.Title, o => o.MapFrom(s => s.Job.Title))
-                .ForMember(d => d.Date, o => o.MapFrom(s => s.Job.Date))
+                .ForMember(d => d.Date, o => o.MapFrom(s => s.Job.Creation))
                 .ForMember(d => d.EmployerUsername, o => o.MapFrom(s => s.Job.Candidates
                             .FirstOrDefault(x => x.IsEmployer).AppUser.UserName))
                 .ForMember(d => d.Type, o => o.MapFrom(s => s.Job.Type));

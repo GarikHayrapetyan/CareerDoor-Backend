@@ -34,7 +34,7 @@ namespace Application.Profiles
                 var param = request.Params;
                 var query = _context.JobCandidate
                 .Where(u => u.AppUser.UserName == param.Username)
-                .OrderBy(a => a.Job.Date)
+                .OrderBy(a => a.Job.Creation)
                 .ProjectTo<UserJobDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
