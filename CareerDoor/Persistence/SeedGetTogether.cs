@@ -81,7 +81,7 @@ namespace Persistence
                                  IsHost = false
                              },
                          }
-                     },
+                     }, 
                      new GetTogether
                      {
                          Title = "Java",

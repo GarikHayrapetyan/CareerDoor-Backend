@@ -36,6 +36,7 @@ namespace Application.Jobs
             public async Task<Result<PagedList<JobDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var query = _context.Jobs
+                    .Include(x=>x.JobType)
                     .Where(d=>d.Expiration >= DateTime.UtcNow)
                     .OrderBy(d => d.Creation)
                     .ProjectTo<JobDto>(_mapper.ConfigurationProvider,new { currentUsername = _userAccessor.GetUsername()})

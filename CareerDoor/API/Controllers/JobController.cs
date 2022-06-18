@@ -31,7 +31,7 @@ namespace API.Controllers
 
         // POST api/<JobController>
         [HttpPost]
-        public async Task<IActionResult> Create(Job job)
+        public async Task<IActionResult> Create(JobDto job)
         {
             return HandleResult(await Mediator.Send(new Create.Command {Job = job}));
         }

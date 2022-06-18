@@ -1,12 +1,10 @@
-﻿using Domain;
-using FluentValidation;
-
+﻿using FluentValidation;
 
 namespace Application.Jobs
 {
-    public class JobValidator : AbstractValidator<Job>
+    class JobDtoValidator : AbstractValidator<JobDto>
     {
-        public JobValidator()
+        public JobDtoValidator()
         {
             RuleFor(x => x.Title).NotNull().NotEmpty();
             RuleFor(x => x.Company).NotNull().NotEmpty();
@@ -17,7 +15,7 @@ namespace Application.Jobs
             RuleFor(x => x.Industry).NotNull().NotEmpty();
             RuleFor(x => x.Location).NotNull().NotEmpty();
             RuleFor(x => x.EmployeeCount).NotNull().NotEmpty();
-            RuleFor(x => x.JobType.Type).NotNull().NotEmpty();
+            RuleFor(x => x.Type).NotNull().NotEmpty();
         }
     }
 }

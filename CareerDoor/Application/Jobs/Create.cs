@@ -1,5 +1,6 @@
 ﻿using Application.Core;
 using Application.Interfaces;
+using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -14,14 +15,14 @@ namespace Application.Jobs
     public class Create
     {
         public class Command : IRequest<Result<Unit>> {
-            public Job Job { get; set; }
+            public JobDto Job { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command> {
 
             public CommandValidator()
             {
-                RuleFor(x => x.Job).SetValidator(new JobValidator());
+                RuleFor(x => x.Job).SetValidator(new JobDtoValidator());
             }
         }
 
@@ -29,28 +30,44 @@ namespace Application.Jobs
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IUserAccessor userAccessor)
+            public Handler(DataContext context, IUserAccessor userAccessor, IMapper mapper)
             {
                 _context = context;
                 _userAccessor = userAccessor;
+                _mapper = mapper;
             }
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                request.Job.Creation = DateTime.UtcNow;
+                var jobDto = request.Job;
+                jobDto.Creation = DateTime.UtcNow;
 
                 var user = await _context.Users.FirstOrDefaultAsync(x=>x.UserName == _userAccessor.GetUsername());
+                var jobType = await _context.JobType.FirstOrDefaultAsync(x => x.Type == jobDto.Type);
+
+                if(jobType == null)
+                {
+                    return Result<Unit>.Failure("Job type does not exist.");
+                }
+
+                var job = new Job();
+
+                _mapper.Map(jobDto, job);
+
+                job.JobTypeId = jobType.Id;
 
                 var candidate = new JobCandidate
                 {
                     AppUser = user,
-                    Job = request.Job,
+                    Job = job,
                     IsEmployer = true
                 };
 
-                request.Job.Candidates.Add(candidate);
 
-                _context.Jobs.Add(request.Job);               
+                job.Candidates.Add(candidate);
+
+                _context.Jobs.Add(job);               
 
                 var success = await _context.SaveChangesAsync() > 0;
 

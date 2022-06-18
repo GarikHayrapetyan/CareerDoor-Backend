@@ -56,6 +56,8 @@ namespace Application.Core
             CreateMap<Job, JobDto>()
                 .ForMember(d => d.EmployeerUsername, o => o.MapFrom(s => s.Candidates.FirstOrDefault(x => x.IsEmployer).AppUser.UserName));
 
+            CreateMap<JobDto, Job>();
+
             CreateMap<JobCandidate, Profiles.Profile>()
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
@@ -66,8 +68,7 @@ namespace Application.Core
                 .ForMember(d => d.Title, o => o.MapFrom(s => s.Job.Title))
                 .ForMember(d => d.Date, o => o.MapFrom(s => s.Job.Creation))
                 .ForMember(d => d.EmployerUsername, o => o.MapFrom(s => s.Job.Candidates
-                            .FirstOrDefault(x => x.IsEmployer).AppUser.UserName))
-                .ForMember(d => d.Type, o => o.MapFrom(s => s.Job.Type));
+                            .FirstOrDefault(x => x.IsEmployer).AppUser.UserName));
         }
     }
 }

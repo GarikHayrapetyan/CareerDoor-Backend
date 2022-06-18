@@ -43,7 +43,7 @@ namespace Application.Jobs
                     return null;
                 }
 
-                var x = _mapper.Map(request.Job, job);
+               _mapper.Map(request.Job, job);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
