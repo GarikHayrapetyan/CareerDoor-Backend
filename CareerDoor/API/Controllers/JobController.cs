@@ -39,9 +39,8 @@ namespace API.Controllers
         // PUT api/<JobController>/5
         [Authorize(Policy = "IsJobEmployer")]        
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(Guid id, Job job)
+        public async Task<IActionResult> Edit(Guid id, JobDto job)
         {
-            job.Id = id;
             return HandleResult(await Mediator.Send(new Edit.Command {Job = job }));
         }
 

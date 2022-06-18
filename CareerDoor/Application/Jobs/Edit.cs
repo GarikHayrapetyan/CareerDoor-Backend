@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,14 +13,14 @@ namespace Application.Jobs
     public class Edit
     {
         public class Command: IRequest<Result<Unit>> {
-            public Job Job{ get; set; }
+            public JobDto Job{ get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Job).SetValidator(new JobValidator());
+                RuleFor(x => x.Job).SetValidator(new JobDtoValidator());
             }
         }
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -36,14 +37,23 @@ namespace Application.Jobs
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var job = await _context.Jobs.FindAsync(request.Job.Id);
+                var jobDto = request.Job;
+                var job = await _context.Jobs.FindAsync(jobDto.Id);
 
                 if (job == null)
                 {
                     return null;
                 }
 
-               _mapper.Map(request.Job, job);
+                var jobType = await _context.JobType.FirstOrDefaultAsync(x => x.Type == jobDto.Type);
+
+                if (jobType == null)
+                {
+                    return Result<Unit>.Failure("Job type does not exist.");
+                }
+
+                jobDto.Creation = job.Creation;
+                _mapper.Map(jobDto, job);
 
                 var success = await _context.SaveChangesAsync() > 0;
 
