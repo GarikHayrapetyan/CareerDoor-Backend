@@ -21,6 +21,7 @@ namespace Persistence
         public DbSet<JobCandidate> JobCandidate { get; set; }
         public DbSet<ResetPassword> ResetPasswords { get; set; }
         public DbSet<JobType> JobType { get; set; }
+        public DbSet<JobExperience> JobExperience { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

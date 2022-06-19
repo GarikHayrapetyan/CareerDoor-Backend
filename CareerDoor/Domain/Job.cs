@@ -15,7 +15,8 @@ namespace Domain
         public string Company { get; set; }
         public string Industry { get; set; }
         public string Location{ get; set; }
-        public string Experience { get; set; }
+        public Guid JobExperienceId { get; set; }
+        public JobExperience JobExperience { get; set; }
         public DateTime Expiration { get; set; }
         public DateTime Creation { get; set; }
         public string EmployeeCount { get; set; }

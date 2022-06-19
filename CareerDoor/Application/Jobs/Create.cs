@@ -51,11 +51,19 @@ namespace Application.Jobs
                     return Result<Unit>.Failure("Job type does not exist.");
                 }
 
+                var jobExperience = await _context.JobExperience.FirstOrDefaultAsync(x=>x.Experience == jobDto.Experience);
+
+                if (jobExperience == null)
+                {
+                    return Result<Unit>.Failure("Job experience does not exist.");
+                }
+
                 var job = new Job();
 
                 _mapper.Map(jobDto, job);
 
                 job.JobTypeId = jobType.Id;
+                job.JobExperienceId = jobExperience.Id;
 
                 var candidate = new JobCandidate
                 {
@@ -76,7 +84,7 @@ namespace Application.Jobs
                     return Result<Unit>.Success(Unit.Value);
                 }
 
-                return Result<Unit>.Failure("Failed to save the meeting.");
+                return Result<Unit>.Failure("Failed to save the job.");
             }
         }
     }

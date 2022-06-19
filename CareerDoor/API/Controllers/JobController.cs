@@ -41,7 +41,7 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(Guid id, JobDto job)
         {
-            return HandleResult(await Mediator.Send(new Edit.Command {Job = job }));
+            return HandleResult(await Mediator.Send(new Edit.Command{Job = job }));
         }
 
         // DELETE api/<JobController>/5

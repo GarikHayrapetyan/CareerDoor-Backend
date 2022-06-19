@@ -52,6 +52,13 @@ namespace Application.Jobs
                     return Result<Unit>.Failure("Job type does not exist.");
                 }
 
+                var jobExperience = await _context.JobExperience.FirstOrDefaultAsync(x => x.Experience == jobDto.Experience);
+
+                if (jobExperience == null)
+                {
+                    return Result<Unit>.Failure("Job experience does not exist.");
+                }
+
                 jobDto.Creation = job.Creation;
                 _mapper.Map(jobDto, job);
 

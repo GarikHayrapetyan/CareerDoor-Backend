@@ -10,7 +10,7 @@ namespace Application.Jobs
         {
             RuleFor(x => x.Title).NotNull().NotEmpty();
             RuleFor(x => x.Company).NotNull().NotEmpty();
-            RuleFor(x => x.Experience).NotNull().NotEmpty();
+            RuleFor(x => x.JobExperience.Experience).NotNull().NotEmpty();
             RuleFor(x => x.Expiration).NotNull().NotEmpty();
             RuleFor(x => x.Description).NotNull().NotEmpty();
             RuleFor(x => x.Functionality).NotNull().NotEmpty();
